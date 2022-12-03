@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Optional;
 
 @Entity
 @PrimaryKeyJoinColumn(name="user_id")
@@ -28,17 +29,9 @@ public class Checking extends BasicAccount {
     public Checking() {
     }
 
-    public Checking(Money balance, AccountHolder primaryOwner, String secretKey, Money minimumBalance,
-                    Date creationDate, Status status) {
-        super(balance, primaryOwner, creationDate);
-        this.secretKey = secretKey;
-        this.minimumBalance.setAmount(minimumBalance.getAmount());
-        this.monthlyMaintenanceFee.setAmount(BigDecimal.valueOf(12));
-        this.status = status;
-    }
-
-    public Checking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, String secretKey,
+    public Checking(Money balance, AccountHolder primaryOwner, Optional<AccountHolder> secondaryOwner, String secretKey,
                     Money minimumBalance, Date creationDate, Status status) {
+
         super(balance, primaryOwner, secondaryOwner, creationDate);
         this.secretKey = secretKey;
         this.minimumBalance.setAmount(minimumBalance.getAmount());
@@ -46,11 +39,17 @@ public class Checking extends BasicAccount {
         this.status = status;
     }
 
-    public Integer validateAge (AccountHolder owner){
+    public void ownerAge (AccountHolder owner){
         LocalDate fechaNac = LocalDate.of(owner.getDateOfBirth().getYear(), owner.getDateOfBirth().getMonth(), owner.getDateOfBirth().getDay());
         LocalDate hoy = LocalDate.now();
         Period anyos = Period.between(fechaNac, hoy);
-        return anyos.getYears();
+
+        if (anyos.getYears()<24){
+
+        }else{
+
+        }
+
     }
 
     public String getSecretKey() {
@@ -92,6 +91,7 @@ public class Checking extends BasicAccount {
         if (balance.getAmount().compareTo(getMinimumBalance().getAmount())==-1){
             balance.setAmount(balance.getAmount().subtract(getPenaltyFee()));
             super.setBalance(balance);
+            System.out.println("Penalty charged in account: "+super.getPenaltyFee()+"€");
         }else {
             super.setBalance(balance);
         }

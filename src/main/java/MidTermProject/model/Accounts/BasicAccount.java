@@ -7,6 +7,7 @@ import com.sun.istack.NotNull;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Optional;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -31,17 +32,10 @@ public class BasicAccount {
     public BasicAccount() {
     }
 
-    public BasicAccount(Money balance, AccountHolder primaryOwner, Date creationDate) {
+    public BasicAccount(Money balance, AccountHolder primaryOwner, Optional<AccountHolder> secondaryOwner, Date creationDate) {
         this.balance = balance;
         this.primaryOwner = primaryOwner;
-        this.creationDate = creationDate;
-        setPenaltyFee(BigDecimal.valueOf(40.0));
-    }
-
-    public BasicAccount(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Date creationDate) {
-        this.balance = balance;
-        this.primaryOwner = primaryOwner;
-        this.secondaryOwner = secondaryOwner;
+        if(secondaryOwner.isPresent()) this.secondaryOwner = secondaryOwner.get();
         this.creationDate = creationDate;
         setPenaltyFee(BigDecimal.valueOf(40.0));
     }

@@ -1,5 +1,6 @@
 package MidTermProject;
 
+import MidTermProject.model.Accounts.BasicAccount;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -13,6 +14,9 @@ public class MidTermProjectApplication {
 		Date today = new Date(String.valueOf(LocalDate.now()));
 		System.out.println(today);
 		SpringApplication.run(MidTermProjectApplication.class, args);
+
+		BasicAccount b = new BasicAccount(null, 323,null,"2022-09-20");
+		System.out.println(b);
 	}
 
 
