@@ -26,15 +26,24 @@ public class Savings extends BasicAccount{
     @Column(name="status", columnDefinition="ENUM('FROZEN', 'ACTIVE')",nullable = false)
     private Status status;
 
+    private int lastYearChecked;
+
+
     public Savings() {
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, Optional<AccountHolder> secondaryOwner, Date creationDate, String secretKey, Money minimumBalance, BigDecimal interestRate, Status status) {
+    public Savings(Money balance, AccountHolder primaryOwner, Optional<AccountHolder> secondaryOwner, Date creationDate,
+                   String secretKey, Money minimumBalance, BigDecimal interestRate, Status status) {
         super(balance, primaryOwner, secondaryOwner, creationDate);
         this.secretKey = secretKey;
         setMinimumBalance(minimumBalance);
         setInterestRate(interestRate);
         this.status = status;
+        this.lastYearChecked=creationDate.getYear();
+    }
+
+    public int getLastYearChecked() {
+        return lastYearChecked;
     }
 
     public String getSecretKey() {
@@ -63,6 +72,7 @@ public class Savings extends BasicAccount{
     }
 
     public void setInterestRate(BigDecimal interestRate) {
+        //si el tipo de interés a aplicar está entre 0% y 50% se admite, sino se pone por defecto 0.25%
         if (minimumBalance.getAmount().compareTo(BigDecimal.valueOf(0.5))==-1 && minimumBalance.getAmount().compareTo(BigDecimal.valueOf(0))==1){
             this.interestRate = interestRate;
         }else{
@@ -90,25 +100,20 @@ public class Savings extends BasicAccount{
 
     @Override
     public Money getBalance() {
-        //Calculamos los años que han pasado desde la fecha de creación hasta hoy
-        LocalDate fechaCre = LocalDate.of(getCreationDate().getYear(), getCreationDate().getMonth(), getCreationDate().getDay());
-        LocalDate hoy = LocalDate.now();
-        Period anyos = Period.between(hoy, fechaCre);
-        //Balance acumulado será igual balance base, por el interés elevado al número de años transcurridos desde
-        //la creación de la cuenta, ya que los intereses generados generan a su vez intereses
-        BigDecimal cumulatedInterest = getInterestRate().pow(anyos.getYears());
-        Money cumulatedBalance= new Money(super.getBalance().getAmount().multiply(cumulatedInterest));
-        //Comprobamos si el balance actual es igual al calculado, para no volver a añadir la cantidad correspondiente
-        if(super.getBalance().getAmount().compareTo(cumulatedBalance.getAmount())!=0){
+        if(lastYearChecked<LocalDate.now().getYear()){
+            //Calculamos los años que han pasado desde la última fecha de comprobación hasta hoy
+            int anyos = LocalDate.now().getYear()-lastYearChecked;
+            //Balance acumulado será igual al balance base, por el interés elevado al número de años transcurridos desde
+            //la fecha de última comprobación hasta hoy, ya que los intereses generados generan a su vez intereses.
+            // Ej.: 10000*(1+0.01)^(2022-2018)
+            BigDecimal cumulatedInterest = (getInterestRate().add(BigDecimal.valueOf(1))).pow(anyos);
+            Money cumulatedBalance= new Money(super.getBalance().getAmount().multiply(cumulatedInterest));
             setBalance(cumulatedBalance);
+            //se reasigna el valor al último año comprobado después de actualizar el balance
+            lastYearChecked=LocalDate.now().getYear();
             return super.getBalance();
         }else{
             return super.getBalance();
         }
-
-
-
-        //falta ver cómo hacer para que se aplique solo una vez cuando ya se ha consultado ese año, ahora mismo
-        //no lo hace así
     }
 }

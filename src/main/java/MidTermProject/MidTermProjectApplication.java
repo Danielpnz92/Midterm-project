@@ -11,12 +11,8 @@ import java.util.Date;
 public class MidTermProjectApplication {
 
 	public static void main(String[] args) {
-		Date today = new Date(String.valueOf(LocalDate.now()));
-		System.out.println(today);
 		SpringApplication.run(MidTermProjectApplication.class, args);
 
-		BasicAccount b = new BasicAccount(null, 323,null,"2022-09-20");
-		System.out.println(b);
 	}
 
 
