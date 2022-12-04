@@ -3,6 +3,7 @@ package MidTermProject.model.Accounts;
 import MidTermProject.model.Users.AccountHolder;
 import MidTermProject.model.Money;
 import com.sun.istack.NotNull;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,6 +17,12 @@ public class BasicAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @AttributeOverrides({
+            @AttributeOverride(name="currency",column=@Column(name="balance_currency")),
+            @AttributeOverride(name="amount",column=@Column(name="balance_amount"))
+    })
+    @Embedded
     private Money balance;
     @ManyToOne
     @JoinColumn(name = "account_holder_id")

@@ -18,7 +18,11 @@ public class Savings extends BasicAccount{
 
     @NotNull
     private String secretKey;
-
+    @AttributeOverrides({
+            @AttributeOverride(name="currency",column=@Column(name="minimum_balance_currency")),
+            @AttributeOverride(name="amount",column=@Column(name="minimum_balance_amount"))
+    })
+    @Embedded
     private Money minimumBalance;
     @NotNull
     private BigDecimal interestRate;

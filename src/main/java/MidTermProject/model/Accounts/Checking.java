@@ -18,9 +18,17 @@ public class Checking extends BasicAccount {
 
     @NotNull
     private String secretKey;
-
+    @AttributeOverrides({
+            @AttributeOverride(name="currency",column=@Column(name="minimum_balance_currency")),
+            @AttributeOverride(name="amount",column=@Column(name="minimum_balance_amount"))
+    })
+    @Embedded
     private Money minimumBalance;
-    @NotNull
+    @AttributeOverrides({
+            @AttributeOverride(name="currency",column=@Column(name="monthly_fee_currency")),
+            @AttributeOverride(name="amount",column=@Column(name="monthly_fee_amount"))
+    })
+    @Embedded
     private Money monthlyMaintenanceFee;
     @Enumerated(EnumType.STRING)
     @Column(name="status", columnDefinition="ENUM('FROZEN', 'ACTIVE')",nullable = false)

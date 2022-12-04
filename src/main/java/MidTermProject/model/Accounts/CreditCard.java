@@ -3,8 +3,7 @@ import MidTermProject.model.Money;
 import MidTermProject.model.Users.AccountHolder;
 import com.sun.istack.NotNull;
 
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
@@ -15,6 +14,11 @@ import java.util.Optional;
 public class CreditCard extends BasicAccount{
 
     @NotNull
+    @AttributeOverrides({
+            @AttributeOverride(name="currency",column=@Column(name="credit_limit_currency")),
+            @AttributeOverride(name="amount",column=@Column(name="credit_limit_amount"))
+    })
+    @Embedded
     private Money creditLimit;
     @NotNull
     private BigDecimal interestRate;

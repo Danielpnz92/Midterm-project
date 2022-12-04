@@ -5,9 +5,8 @@ import org.springframework.stereotype.Component;
 
 import static MidTermProject.Methods.Colors.*;
 
-@Component
 public class MainMenu {
-    @Autowired
+
     Utils utils;
 
     /**
