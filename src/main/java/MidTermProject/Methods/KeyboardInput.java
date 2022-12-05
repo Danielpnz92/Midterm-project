@@ -94,6 +94,32 @@ public class KeyboardInput {
 
     /**
      * @param promptMsg Main message
+     * @param errorMsg  Error message if input is not a non-empty, non-numeric string
+     * @return Valid string
+     * @Description Keeps prompting the user until the introduced value is a boolean
+     */
+    public boolean readBoolean(String promptMsg, String errorMsg) {
+        boolean booleanInput= false;
+        String strInput;
+        boolean valid = false;
+
+        System.out.print(promptMsg);
+
+        while (!valid) {
+            strInput = scanner.nextLine();
+            try {
+                booleanInput=Boolean.parseBoolean(strInput);
+                System.out.print(ANSI_RED + errorMsg + ANSI_RESET);
+            } catch (NumberFormatException nfe) {
+                if (strInput.length() > 0) valid = true;
+                else System.out.print(ANSI_RED + errorMsg + ANSI_RESET);
+            }
+        }
+        return booleanInput;
+    }
+
+    /**
+     * @param promptMsg Main message
      * @param errorMsg  Error message if input is not a non-empty string with less than 60 characters
      * @return Valid string
      * @Description Keeps prompting the user until the introduced value is a non-empty string with less than 60 characters

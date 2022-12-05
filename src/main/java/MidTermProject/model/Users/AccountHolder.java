@@ -21,11 +21,6 @@ public class AccountHolder extends User {
     @NotNull
     private Address primaryAddress;
 
-//    private String street;
-//    private Integer houseNumber;
-//    private String telephone;
-//    private Integer zipCode;
-
     @AttributeOverrides({
             @AttributeOverride(name="street",column=@Column(name="mailing_street")),
             @AttributeOverride(name="houseNumber",column=@Column(name="mailing_house_number")),
