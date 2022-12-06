@@ -16,7 +16,7 @@ public class CheckingController implements ICheckingController {
     @Autowired
     CheckingRepository checkingRepository;
 
-    @PostMapping("/accounts")
+    @PostMapping("/accounts/checking")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveChecking(@RequestBody @Valid Checking account) {
         checkingRepository.save(account);

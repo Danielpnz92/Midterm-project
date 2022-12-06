@@ -1,10 +1,14 @@
 package MidTermProject.model.Users;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
@@ -14,13 +18,9 @@ public class User {
 
     @NotNull
     private String name;
-
-    public User() {
-    }
-
-    public User(String name) {
-        this.name = name;
-    }
+    private String password;
+    @NotNull
+    private String role;
 
     public Integer getUserId() {
         return userId;
@@ -32,5 +32,17 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

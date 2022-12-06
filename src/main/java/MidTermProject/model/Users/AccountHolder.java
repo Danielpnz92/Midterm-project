@@ -8,6 +8,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -41,17 +42,12 @@ public class AccountHolder extends User {
     public AccountHolder() {
     }
 
-    public AccountHolder(String name, Date dateOfBirth, Address primaryAddress, Address mailingAddress) {
-        super(name);
+    public AccountHolder(Integer userId, String name, String password, String role, Date dateOfBirth,
+                         Address primaryAddress, Optional<Address> mailingAddress) {
+        super(userId, name, password, "ACCOUNT_HOLDER");
         this.dateOfBirth = dateOfBirth;
         this.primaryAddress = primaryAddress;
-        this.mailingAddress = mailingAddress;
-    }
-
-    public AccountHolder(String name, Date dateOfBirth, Address primaryAddress) {
-        super(name);
-        this.dateOfBirth = dateOfBirth;
-        this.primaryAddress = primaryAddress;
+        if (mailingAddress.isPresent()) this.mailingAddress = mailingAddress.get();
     }
 
     public Date getDateOfBirth() {

@@ -9,7 +9,7 @@ public class ThirdParty extends User{
     public ThirdParty() {
     }
 
-    public ThirdParty(String name) {
-        super(name);
+    public ThirdParty(Integer userId, String name, String password, String role) {
+        super(userId, name, password, "THIRD_PARTY");
     }
 }
