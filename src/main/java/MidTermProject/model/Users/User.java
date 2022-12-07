@@ -19,8 +19,9 @@ public class User {
     @NotNull
     private String name;
     private String password;
-    @NotNull
-    private String role;
+    @Enumerated(EnumType.STRING)
+    @Column(name="role", columnDefinition="ENUM('ADMIN', 'ACCOUNT_HOLDER', 'THIRD_PARTY')",nullable = false)
+    private Roles role;
 
     public Integer getUserId() {
         return userId;
@@ -34,7 +35,7 @@ public class User {
         this.name = name;
     }
 
-    public String getRole() {
+    public Roles getRole() {
         return role;
     }
 

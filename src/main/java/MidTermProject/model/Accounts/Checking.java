@@ -42,8 +42,8 @@ public class Checking extends BasicAccount {
 
         super(balance, primaryOwner, secondaryOwner, creationDate);
         this.secretKey = secretKey;
-        this.minimumBalance.setAmount(minimumBalance.getAmount());
-        this.monthlyMaintenanceFee.setAmount(BigDecimal.valueOf(12));
+        this.minimumBalance=minimumBalance;
+        this.monthlyMaintenanceFee= new Money(BigDecimal.valueOf(12));
         this.status = status;
     }
 

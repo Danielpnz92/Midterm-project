@@ -3,8 +3,15 @@ package MidTermProject.controller.impl;
 import MidTermProject.controller.dto.AccountBalanceDTO;
 import MidTermProject.controller.interfaces.IBasicAccountController;
 import MidTermProject.model.Accounts.BasicAccount;
+import MidTermProject.model.Accounts.Checking;
+import MidTermProject.model.Accounts.Savings;
+import MidTermProject.model.Accounts.StudentAccount;
+import MidTermProject.model.Address;
 import MidTermProject.model.Money;
-import MidTermProject.repository.BasicAccountRepository;
+import MidTermProject.model.Users.AccountHolder;
+import MidTermProject.model.Users.Roles;
+import MidTermProject.model.Users.Status;
+import MidTermProject.repository.*;
 import MidTermProject.service.impl.BasicAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -21,9 +32,32 @@ public class BasicAccountController implements IBasicAccountController {
 
     @Autowired
     BasicAccountRepository basicAccountRepository;
-
+    @Autowired
+    CheckingRepository checkingRepository;
+    @Autowired
+    SavingsRepository savingsRepository;
+    @Autowired
+    StudentAccountRepository studentAccountRepository;
+    @Autowired
+    AccountHolderRepository accountHolderRepository;
     @Autowired
     BasicAccountService basicAccountService;
+
+
+    @GetMapping("/accounts/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<BasicAccount> getAll(){
+
+        Optional<Address> address=Optional.empty();
+        Address ad = new Address("fdsf",23,"rdasfsa",8983);
+        AccountHolder ah = new AccountHolder(2, "test_user","pass", String.valueOf(Roles.ACCOUNT_HOLDER),
+                new Date(1992,8,13),ad, address);
+        Checking ch = new Checking(new Money(BigDecimal.valueOf(100)),ah,Optional.empty(),"secretkey",
+                new Money(BigDecimal.valueOf(50)),new Date(), Status.ACTIVE);
+//        accountHolderRepository.save(ah);
+        checkingRepository.save(ch);
+        return basicAccountRepository.findAll();
+    }
 
     @GetMapping("/accounts/balance/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -55,7 +89,7 @@ public class BasicAccountController implements IBasicAccountController {
         basicAccountService.updateBalance(accountBalanceDTO.getBalance(),id);
     }
 
-    @PatchMapping("/accounts/transfer/{senderAccountId}/{receiverAccountId}")
+    @PatchMapping("/accounts/transfer/{senderAccountId}/{receiverAccountId}/{receiverName}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void transferBalance(@RequestBody @Valid AccountBalanceDTO accountBalanceDTO,
                                 @PathVariable Integer senderAccountId,
@@ -100,6 +134,38 @@ public class BasicAccountController implements IBasicAccountController {
         }
 
     }
+
+//    @PatchMapping("/accounts/third_party/{amount}/{accountId}/{secretKey}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    public void thirdPartySendReceive(Double amount, Integer accountId, String secretKey) {
+//        Optional<BasicAccount> basicAccountOptional = basicAccountRepository.findById(accountId);
+//        if (basicAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Account not found");
+//
+//        //Secret key pueden tener las cuentas de checking, student account y savings
+//        Optional<Checking> checkingOptional = checkingRepository.findById(accountId);
+//        Optional<StudentAccount> studentAccountOptional = studentAccountRepository.findById(accountId);
+//        Optional<Savings> savingsOptional = savingsRepository.findById(accountId);
+//
+//
+//        String secretKeyFromAccount;
+//        if (!checkingOptional.isEmpty()){
+//            secretKeyFromAccount = checkingOptional.get().getSecretKey();
+//            if (!secretKeyFromAccount.equals(secretKey)) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Secret key mismatched with that account id");
+//
+//        if (savingsOptional.isEmpty()){
+//                Optional<StudentAccount> studentAccountOptional = studentAccountRepository.findById(accountId);
+//            }
+//        }else{
+//            Optional<Savings> savingsOptional = savingsRepository.findById(accountId);
+//            if(!savingsOptional.isEmpty()){
+//
+//            }
+//        }
+//
+//
+//
+//
+//    }
 
 
 }

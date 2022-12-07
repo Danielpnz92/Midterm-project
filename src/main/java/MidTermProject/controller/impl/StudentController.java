@@ -16,9 +16,10 @@ public class StudentController implements IStudentAccountController {
     @Autowired
     StudentAccountRepository studentAccountRepository;
 
-    @PostMapping("/accounts/studentaccount")
+    @PostMapping("/accounts/student_account")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveStudentAccount(@RequestBody @Valid StudentAccount account) {
         studentAccountRepository.save(account);
     }
 }
+

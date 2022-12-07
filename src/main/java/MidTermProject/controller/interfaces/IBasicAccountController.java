@@ -5,6 +5,7 @@ import MidTermProject.model.Accounts.BasicAccount;
 import MidTermProject.model.Money;
 import MidTermProject.service.impl.BasicAccountService;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public interface IBasicAccountController {
@@ -14,4 +15,6 @@ public interface IBasicAccountController {
 
     void transferBalance(AccountBalanceDTO accountBalanceDTO, Integer senderAccountId,
                          Integer receiverAccountId, String receiverName);
+
+//    void thirdPartySendReceive(Double amount, Integer accountId, String secretKey);
 }

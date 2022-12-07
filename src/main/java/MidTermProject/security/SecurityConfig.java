@@ -37,8 +37,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").authenticated()
                 .antMatchers(HttpMethod.PATCH, "/accounts/balance_modify/{id}").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/accounts/balance/{id}").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/accounts/checking").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/accounts/credit_card").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/accounts/savings").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/accounts/student_account").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/own_accounts/balance/{id}").hasAnyAuthority("ACCOUNT_HOLDER")
-                .antMatchers(HttpMethod.GET, "/accounts/transfer/{senderAccountId}/{receiverAccountId}").hasAnyAuthority("ACCOUNT_HOLDER");
+                .antMatchers(HttpMethod.GET, "/accounts/transfer/{senderAccountId}/{receiverAccountId}").hasAnyAuthority("ACCOUNT_HOLDER")
+                .antMatchers(HttpMethod.POST, "/users/third_party").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/accounts/third_party/{amount}/{accountId}/{secretKey}").hasAnyAuthority("THIRD_PARTY");
+
+
+
 
 //                .antMatchers("/api/teachers").authenticated();
 //                .anyRequest().permitAll();

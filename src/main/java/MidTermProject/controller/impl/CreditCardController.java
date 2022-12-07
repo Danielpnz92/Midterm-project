@@ -17,9 +17,10 @@ public class CreditCardController implements ICreditCardController {
     @Autowired
     CreditCardRepository creditCardRepository;
 
-    @PostMapping("/accounts/creditcard")
+    @PostMapping("/accounts/credit_card")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveCredit(@RequestBody @Valid CreditCard account) {
         creditCardRepository.save(account);
     }
 }
+
