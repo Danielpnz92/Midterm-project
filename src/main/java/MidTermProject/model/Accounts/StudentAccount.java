@@ -23,7 +23,6 @@ public class StudentAccount extends BasicAccount {
     public StudentAccount() {
     }
 
-
     public StudentAccount(Money balance, AccountHolder primaryOwner, Optional<AccountHolder> secondaryOwner, String secretKey, Date creationDate, Status status) {
         super(balance, primaryOwner, secondaryOwner, creationDate);
         this.secretKey = secretKey;

@@ -34,7 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic();
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/api/**").authenticated()
                 .antMatchers(HttpMethod.PATCH, "/accounts/balance_modify/{id}").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, "/accounts/balance/{id}").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/accounts/checking").hasAnyAuthority("ADMIN")
@@ -45,13 +44,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/accounts/transfer/{senderAccountId}/{receiverAccountId}").hasAnyAuthority("ACCOUNT_HOLDER")
                 .antMatchers(HttpMethod.POST, "/users/third_party").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/accounts/third_party/{amount}/{accountId}/{secretKey}").hasAnyAuthority("THIRD_PARTY");
+//                .antMatchers("/account_holder/all").authenticated();
 
 
 
 
 //                .antMatchers("/api/teachers").authenticated();
 //                .anyRequest().permitAll();
-
 
     }
 }

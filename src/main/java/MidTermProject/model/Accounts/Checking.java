@@ -41,23 +41,11 @@ public class Checking extends BasicAccount {
                     Money minimumBalance, Date creationDate, Status status) {
 
         super(balance, primaryOwner, secondaryOwner, creationDate);
+        setBalance(balance);
         this.secretKey = secretKey;
-        this.minimumBalance=minimumBalance;
+        setMinimumBalance(minimumBalance);
         this.monthlyMaintenanceFee= new Money(BigDecimal.valueOf(12));
         this.status = status;
-    }
-
-    public void ownerAge (AccountHolder owner){
-        LocalDate fechaNac = LocalDate.of(owner.getDateOfBirth().getYear(), owner.getDateOfBirth().getMonth(), owner.getDateOfBirth().getDay());
-        LocalDate hoy = LocalDate.now();
-        Period anyos = Period.between(fechaNac, hoy);
-
-        if (anyos.getYears()<24){
-
-        }else{
-
-        }
-
     }
 
     public String getSecretKey() {

@@ -44,6 +44,7 @@ public class Savings extends BasicAccount{
         setInterestRate(interestRate);
         this.status = status;
         this.lastYearChecked=creationDate.getYear();
+        setBalance(balance);
     }
 
     public int getLastYearChecked() {

@@ -8,7 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
@@ -22,6 +21,12 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name="role", columnDefinition="ENUM('ADMIN', 'ACCOUNT_HOLDER', 'THIRD_PARTY')",nullable = false)
     private Roles role;
+
+    public User(String name, String password, Roles role) {
+        this.name = name;
+        this.password = password;
+        this.role = role;
+    }
 
     public Integer getUserId() {
         return userId;
