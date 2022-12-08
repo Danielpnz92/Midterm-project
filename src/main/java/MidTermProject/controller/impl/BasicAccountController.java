@@ -111,10 +111,9 @@ public class BasicAccountController implements IBasicAccountController {
         BasicAccount receiverAccount = basicAccountRepository.findById(receiverAccountId).get();
 
         //Comprobamos que el nombre del destinatario coincide con el de la cuenta especificada para la transferencia
-        if (  !(receiverName == receiverAccount.getPrimaryOwner().getName() &&
-                receiverName == receiverAccount.getSecondaryOwner().getName())  ){
+        if (  !(receiverName.equals(receiverAccount.getPrimaryOwner().getName()))  ){
             throw new
-                    ResponseStatusException(HttpStatus.BAD_REQUEST,"The owner of the destination account" +
+                    ResponseStatusException(HttpStatus.BAD_REQUEST,"The owner of the destination account " +
                     "does not match the name provided, the transfer won't take place");
         }
 
@@ -194,20 +193,12 @@ public class BasicAccountController implements IBasicAccountController {
         Optional<CreditCard> creditCardOptional = creditCardRepository.findById(id);
         Optional<StudentAccount> studentAccountOptional = studentAccountRepository.findById(id);
 
-        if (savingsOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
-        savingsRepository.deleteById(id);
+        if (!savingsOptional.isEmpty()) savingsRepository.deleteById(id);
+        else if (!checkingOptional.isEmpty()) checkingRepository.deleteById(id);
+        else if (!creditCardOptional.isEmpty()) creditCardRepository.deleteById(id);
+        else if (!studentAccountOptional.isEmpty()) studentAccountRepository.deleteById(id);
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
 
-        if (checkingOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
-        checkingRepository.deleteById(id);
-
-        if (creditCardOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
-        creditCardRepository.deleteById(id);
-
-        if (studentAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
-        studentAccountRepository.deleteById(id);
-
-        if (basicAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
-        basicAccountRepository.deleteById(id);
     }
 
 
