@@ -8,6 +8,7 @@ import MidTermProject.model.Money;
 import MidTermProject.model.Users.AccountHolder;
 import MidTermProject.model.Users.Roles;
 import MidTermProject.model.Users.Status;
+import MidTermProject.repository.AccountHolderRepository;
 import MidTermProject.repository.BasicAccountRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,6 +46,9 @@ public class SavingsControllerTests {
     @Autowired
     BasicAccountRepository basicAccountRepository;
 
+    @Autowired
+    AccountHolderRepository accountHolderRepository;
+
     private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -55,11 +59,8 @@ public class SavingsControllerTests {
 
     @Test
     void saveSavings_validAccount_accountSaved() throws Exception {
-        Address ad = new Address("Urgell",25,"45343483",4845);
-        Address adOpt= new Address("Urgell",25,"4561345",4845);
         Date today = new Date(LocalDate.now().getYear(),LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
-        AccountHolder ah = new AccountHolder(3, "test_ac02","passA02", String.valueOf(Roles.ACCOUNT_HOLDER),
-                new Date(1985,4,5),ad, Optional.of(adOpt));
+        AccountHolder ah = accountHolderRepository.findById(3).get();
 
         Savings sa = new Savings(new Money(BigDecimal.valueOf(2244)),
                 ah,

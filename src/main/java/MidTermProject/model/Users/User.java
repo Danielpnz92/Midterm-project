@@ -22,7 +22,8 @@ public class User {
     @Column(name="role", columnDefinition="ENUM('ADMIN', 'ACCOUNT_HOLDER', 'THIRD_PARTY')",nullable = false)
     private Roles role;
 
-    public User(String name, String password, Roles role) {
+    public User(Integer id, String name, String password, Roles role) {
+        this.userId=id;
         this.name = name;
         this.password = password;
         this.role = role;

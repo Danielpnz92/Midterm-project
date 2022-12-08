@@ -16,5 +16,7 @@ public interface IBasicAccountController {
     void transferBalance(AccountBalanceDTO accountBalanceDTO, Integer senderAccountId,
                          Integer receiverAccountId, String receiverName);
 
-//    void thirdPartySendReceive(Double amount, Integer accountId, String secretKey);
+    void thirdPartySendReceive(Double amount, Integer accountId, String secretKey);
+
+    void deleteAccount(Integer id);
 }

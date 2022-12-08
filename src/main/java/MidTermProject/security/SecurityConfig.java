@@ -34,9 +34,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic();
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers(HttpMethod.PATCH, "/accounts/balance_modify/{id}").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/accounts/balance/{id}").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST, "/accounts/checking").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/api/accounts/balance_modify/{id}").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/accounts/balance/{id}").hasAnyAuthority("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/accounts/checking").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/accounts/credit_card").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/accounts/savings").hasAnyAuthority("ADMIN")
                 .antMatchers(HttpMethod.POST, "/accounts/student_account").hasAnyAuthority("ADMIN")

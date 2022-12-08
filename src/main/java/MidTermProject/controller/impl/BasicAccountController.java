@@ -2,10 +2,7 @@ package MidTermProject.controller.impl;
 
 import MidTermProject.controller.dto.AccountBalanceDTO;
 import MidTermProject.controller.interfaces.IBasicAccountController;
-import MidTermProject.model.Accounts.BasicAccount;
-import MidTermProject.model.Accounts.Checking;
-import MidTermProject.model.Accounts.Savings;
-import MidTermProject.model.Accounts.StudentAccount;
+import MidTermProject.model.Accounts.*;
 import MidTermProject.model.Address;
 import MidTermProject.model.Money;
 import MidTermProject.model.Users.AccountHolder;
@@ -37,6 +34,8 @@ public class BasicAccountController implements IBasicAccountController {
     CheckingRepository checkingRepository;
     @Autowired
     SavingsRepository savingsRepository;
+    @Autowired
+    CreditCardRepository creditCardRepository;
     @Autowired
     StudentAccountRepository studentAccountRepository;
     @Autowired
@@ -98,6 +97,7 @@ public class BasicAccountController implements IBasicAccountController {
                                 @PathVariable(name = "receiverName") String receiverName) {
         //Nombre del usuario logueado haciendo la petición
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+
         //Primero se busca si la cuenta pertenece al usuario actual como propietario principal
         Optional<BasicAccount> basicAccountOptional = basicAccountRepository.findAccountsOfCurrentUser1(userName, senderAccountId);
         //Si no aparece ninguna, se busca si la cuenta existe para el usuario actual como usuario secuendario
@@ -183,6 +183,31 @@ public class BasicAccountController implements IBasicAccountController {
                     accountId);
         }
 
+    }
+
+    @DeleteMapping("/accounts/delete/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAccount(@PathVariable Integer id) {
+        Optional<BasicAccount> basicAccountOptional = basicAccountRepository.findById(id);
+        Optional<Savings> savingsOptional = savingsRepository.findById(id);
+        Optional<Checking> checkingOptional = checkingRepository.findById(id);
+        Optional<CreditCard> creditCardOptional = creditCardRepository.findById(id);
+        Optional<StudentAccount> studentAccountOptional = studentAccountRepository.findById(id);
+
+        if (savingsOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        savingsRepository.deleteById(id);
+
+        if (checkingOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        checkingRepository.deleteById(id);
+
+        if (creditCardOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        creditCardRepository.deleteById(id);
+
+        if (studentAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        studentAccountRepository.deleteById(id);
+
+        if (basicAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        basicAccountRepository.deleteById(id);
     }
 
 
