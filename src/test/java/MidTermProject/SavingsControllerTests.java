@@ -87,19 +87,6 @@ public class SavingsControllerTests {
                 .andReturn();
 
         assertTrue(mvcResult.getResponse().getContentAsString().contains("2244"));
-//
-//        mockMvc.perform(delete("/api/courses/testing"))
-//                .andExpect(status().isNoContent())
-//                .andReturn();
     }
 
-//    @Test
-//    void saveCourse_invalidCourse_unprocessableEntityResponse() throws Exception {
-//        Course course = new Course("Math", 100, "A1", "2 weeks", null);
-//        String body = objectMapper.writeValueAsString(course);
-//
-//        mockMvc.perform(post("/api/courses").content(body).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isUnprocessableEntity())
-//                .andReturn();
-//    }
 }
