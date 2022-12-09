@@ -44,7 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/own_accounts/balance/{id}").hasAnyAuthority("ROLE_ACCOUNT_HOLDER")
                 .antMatchers(HttpMethod.PATCH, "/api/accounts/transfer/{senderAccountId}/{receiverAccountId}").hasAnyAuthority("ROLE_ACCOUNT_HOLDER")
                 .antMatchers(HttpMethod.POST, "/api/users/third_party").hasAnyAuthority("ROLE_ADMIN")
-                .antMatchers(HttpMethod.PATCH, "/api/accounts/third_party/{amount}/{accountId}/{secretKey}").hasAnyAuthority("ROLE_THIRD_PARTY");
+                .antMatchers(HttpMethod.PATCH, "/api/accounts/third_party/{amount}/{accountId}/{secretKey}").hasAnyAuthority("ROLE_THIRD_PARTY")
+                .antMatchers(HttpMethod.DELETE, "/api/accounts/delete/{id}").hasAnyAuthority("ROLE_ADMIN");
 //                .antMatchers("/account_holder/all").authenticated();
 
 

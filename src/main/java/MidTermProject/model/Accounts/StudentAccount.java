@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Entity
-@PrimaryKeyJoinColumn(name="user_id")
+@PrimaryKeyJoinColumn(name="account_id")
 public class StudentAccount extends BasicAccount {
 
     @NotNull

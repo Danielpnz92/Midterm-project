@@ -192,7 +192,6 @@ class BasicAccountControllerTests {
 //        Integer receiverAccountId = 2;
 
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(userName);
 
         BigDecimal initialBalance = basicAccountRepository.findById(3).get().getBalance().getAmount();
         BigDecimal finalBalance = basicAccountRepository.findById(3).get().getBalance().getAmount()
@@ -254,6 +253,8 @@ class BasicAccountControllerTests {
         AccountHolder ah = accountHolderRepository.findById(3).get();
         Date today = new Date(LocalDate.now().getYear(),LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
         System.out.println(today);
+        System.out.println(today.getMonth());
+        System.out.println(today.getYear());
 
         CreditCard ca = new CreditCard(new Money(BigDecimal.valueOf(5431)),
                 ah,

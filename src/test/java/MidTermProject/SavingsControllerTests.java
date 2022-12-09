@@ -58,6 +58,7 @@ public class SavingsControllerTests {
     }
 
     @Test
+    @WithMockUser(username="user01",roles={"ADMIN"})
     void saveSavings_validAccount_accountSaved() throws Exception {
         Date today = new Date(LocalDate.now().getYear(),LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
         AccountHolder ah = accountHolderRepository.findById(3).get();
@@ -68,7 +69,7 @@ public class SavingsControllerTests {
                 today,
                 "SECRET--KEY",
                 new Money(BigDecimal.valueOf(50)),
-                BigDecimal.valueOf(0.002),
+                BigDecimal.valueOf(0.02),
                 Status.ACTIVE);
 
         String body = objectMapper.writeValueAsString(sa);
@@ -78,6 +79,8 @@ public class SavingsControllerTests {
                 .andExpect(status().isCreated())
                 .andReturn();
 
+        //Especifico el Id de la cuenta directamente, porque el método ca.getId() devuelve "null", ya que
+        //el Id se autoincrementa en la BBDD pero no al instanciar la cuenta
         MvcResult mvcResult = mockMvc.perform(get("/api/accounts/balance/3"))
                 .andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))

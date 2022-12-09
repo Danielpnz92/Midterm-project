@@ -13,7 +13,7 @@ import java.time.Period;
 import java.util.Optional;
 
 @Entity
-@PrimaryKeyJoinColumn(name="user_id")
+@PrimaryKeyJoinColumn(name="account_id")
 public class Checking extends BasicAccount {
 
     @NotNull
