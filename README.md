@@ -14,13 +14,15 @@ los métodos setBalance y setMinimumBalance incluyen lógica adicional de asigna
 
 CreditCard:
 en setCreditLimit y setInterestRate se asigna un valor por defecto si el especificado está fuera de un rango. 
-en el método getBalance se actualiza el balance en base a su tipo de interés y el tiempo transcurrido desde la última vez que se actualizó el balance (en períodos).
+En el método getBalance se actualiza el balance en base a su tipo de interés y el tiempo transcurrido desde la última vez que se actualizó el balance (en meses).
+Se incluyen comentarios en el método para seguir la lógica aplicada
 
 Student:
 Se crea una cuenta de Student si el propietario tiene menos de 24 años. Se incluye en la lógica del controlador de Checking
 
 Savings:
-sigue la misma lógica para setCreditLimit, setInterestRate y getBalance que en CreditCard (los períodos son años)
+sigue la misma lógica para setCreditLimit, setInterestRate y getBalance que en CreditCard (los períodos son años). 
+Se incluyen comentarios en el método para seguir la lógica aplicada
 
 AccountBalanceDTO:
 Objeto utilizado para modificaciones directas en balance de cuentas, transferencias, etc.
@@ -80,3 +82,13 @@ Test unitarios
 Se han creado tests para validar las diferentes rutas con varios casos de uso, todos satisfactorios. En el de borrar cuentas, faltaría encontrar la forma de 
 acceder al id de cuenta en base de datos, ya que al instanciar una cuenta en Spring su id se crea como "null", no la crea con el mismo id que en la BBDD
 que es autoincremental
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+NEXT STEPS:
+1. Ampliar documentación con diagrama UML
+2. Modularizar funciones
+3. Detección de fraude
+4. Despliegue a servicio en la nube
+
