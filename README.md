@@ -71,4 +71,12 @@ excepciones:
 DELETE------->
 - /api/accounts/delete/{id}: borrar cuenta. Desde aquí se puede borrar cualquier tipo de cuenta
 
+Seguridad
+-------------------
+Todas las rutas han sido asignadas a roles específicos y las contraseñas de los usuarios han sido encriptadas
 
+Test unitarios
+-------------------
+Se han creado tests para validar las diferentes rutas con varios casos de uso, todos satisfactorios. En el de borrar cuentas, faltaría encontrar la forma de 
+acceder al id de cuenta en base de datos, ya que al instanciar una cuenta en Spring su id se crea como "null", no la crea con el mismo id que en la BBDD
+que es autoincremental
