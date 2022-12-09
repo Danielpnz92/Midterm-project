@@ -22,6 +22,9 @@ Se crea una cuenta de Student si el propietario tiene menos de 24 años. Se incl
 Savings:
 sigue la misma lógica para setCreditLimit, setInterestRate y getBalance que en CreditCard (los períodos son años)
 
+AccountBalanceDTO:
+Objeto utilizado para modificaciones directas en balance de cuentas, transferencias, etc.
+
 2. Usuarios
 User: contiene las variables comunes a todos los tipos de usuario:
 
