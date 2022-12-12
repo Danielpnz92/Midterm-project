@@ -32,6 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
@@ -89,7 +90,7 @@ class BasicAccountControllerTests {
     }
 
     @Test
-    @WithMockUser(username="test_ac01",roles={"ACCOUNT_HOLDER"})
+    @WithMockUser(username="test_ac02",roles={"ACCOUNT_HOLDER"})
     void getOwnAccountBalance_validAccount_balance() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get("/api/own_accounts/balance/2"))
                 .andExpect(status().isOk())
@@ -103,7 +104,7 @@ class BasicAccountControllerTests {
     @Test
     @WithMockUser(username="user01",roles={"ADMIN"})
     void updateBalance_validUser_balanceUpdated() throws Exception {
-        AccountBalanceDTO accountBalanceDTO = new AccountBalanceDTO(new Money(BigDecimal.valueOf(2222)));
+        AccountBalanceDTO accountBalanceDTO = new AccountBalanceDTO(new Money(BigDecimal.valueOf(253152)));
         String body = objectMapper.writeValueAsString(accountBalanceDTO);
 
         mockMvc.perform(patch("/api/accounts/balance_modify/2").content(body).contentType(MediaType.APPLICATION_JSON))
@@ -115,7 +116,7 @@ class BasicAccountControllerTests {
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        assertTrue(mvcResult.getResponse().getContentAsString().contains("2222"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("253152"));
 
     }
 
@@ -133,13 +134,13 @@ class BasicAccountControllerTests {
 
     @Test
     @WithMockUser(username="test_ac03",roles={"ACCOUNT_HOLDER"})
+    @Transactional
     void transfer_validInput_transferCompleted() throws Exception {
 //        String receiverName = "";
 //        Integer senderAccountId = 3;
 //        Integer receiverAccountId = 2;
 
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(userName);
 
         BigDecimal initialBalance = basicAccountRepository.findById(3).get().getBalance().getAmount();
         BigDecimal finalBalance = basicAccountRepository.findById(3).get().getBalance().getAmount()
@@ -149,7 +150,7 @@ class BasicAccountControllerTests {
         String body = objectMapper.writeValueAsString(accountBalanceDTO);
         System.out.println(body);
 
-        mockMvc.perform(patch("/api/accounts/transfer/3/2/test_ac01").content(body).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/api/accounts/transfer/3/2/test_ac02").content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent())
                 .andReturn();
 
@@ -201,7 +202,7 @@ class BasicAccountControllerTests {
         String body = objectMapper.writeValueAsString(accountBalanceDTO);
 
         mockMvc.perform(patch("/api/accounts/transfer/2/3/test_ac01").content(body).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 
@@ -210,14 +211,15 @@ class BasicAccountControllerTests {
     void thirdPartySendReceive_validInput_balanceUpdated() throws Exception {
 //        double amount = 35.0;
 //        Integer accountId = 2;
-//        String secretKey = "secretkey";
+//        String secretKey = "secretkey1";
 
         BigDecimal initialBalance = basicAccountRepository.findById(2).get().getBalance().getAmount();
         BigDecimal finalBalance = basicAccountRepository.findById(2).get().getBalance().getAmount()
                 .add(BigDecimal.valueOf(35));
 
+        System.out.println(initialBalance);
         System.out.println(finalBalance);
-        mockMvc.perform(patch("/api/accounts/third_party/35/2/secretkey"))
+        mockMvc.perform(patch("/api/accounts/third_party/35/2/secretkey1"))
                 .andExpect(status().isNoContent())
 //                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -266,13 +268,14 @@ class BasicAccountControllerTests {
 
         String body = objectMapper.writeValueAsString(ca);
 
+        System.out.println(body);
         mockMvc.perform(post("/api/accounts/credit_card").content(body).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andReturn();
 
         //Especifico el Id de la cuenta directamente, porque el método ca.getId() devuelve "null", ya que
         //el Id se autoincrementa en la BBDD pero no al instanciar la cuenta
-        mockMvc.perform(delete("/api/accounts/delete/20"))
+        mockMvc.perform(delete("/api/accounts/delete/19"))
                 .andExpect(status().isNoContent())
                 .andReturn();
 

@@ -3,12 +3,14 @@ package MidTermProject.model.Accounts;
 import MidTermProject.model.Users.AccountHolder;
 import MidTermProject.model.Money;
 import com.sun.istack.NotNull;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -35,6 +37,10 @@ public class BasicAccount {
     private BigDecimal penaltyFee;
     @NotNull
     private Date creationDate;
+
+    @OneToMany(mappedBy = "account")
+    @ToString.Exclude
+    private Set<Transactions> transactionsSet;
 
     public BasicAccount() {
     }

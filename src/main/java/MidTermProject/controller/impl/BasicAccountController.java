@@ -71,16 +71,7 @@ public class BasicAccountController implements IBasicAccountController {
     @GetMapping("/own_accounts/balance/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Money getOwnAccountBalance(@PathVariable(name = "id") Integer accountId) {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        //Primero se busca si la cuenta pertenece al usuario actual como propietario principal
-        Optional<BasicAccount> basicAccountOptional = basicAccountRepository.findAccountsOfCurrentUser1(userName, accountId);
-        //Si no aparece ninguna, se busca si la cuenta existe para el usuario actual como usuario secuendario
-        if (basicAccountOptional.isEmpty()) {
-            basicAccountOptional = basicAccountRepository.findAccountsOfCurrentUser2(userName, accountId);
-            if (basicAccountOptional.isEmpty()) throw new
-                    ResponseStatusException(HttpStatus.NOT_FOUND,"Account not owned by user");
-        }
-        return basicAccountOptional.get().getBalance();
+        return basicAccountService.getOwnAccountBalance(accountId);
     }
 
     @PatchMapping("/accounts/balance_modify/{id}")
@@ -95,44 +86,7 @@ public class BasicAccountController implements IBasicAccountController {
                                 @PathVariable(name = "senderAccountId") Integer senderAccountId,
                                 @PathVariable(name = "receiverAccountId") Integer receiverAccountId,
                                 @PathVariable(name = "receiverName") String receiverName) {
-        //Nombre del usuario logueado haciendo la petición
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        //Primero se busca si la cuenta pertenece al usuario actual como propietario principal
-        Optional<BasicAccount> basicAccountOptional = basicAccountRepository.findAccountsOfCurrentUser1(userName, senderAccountId);
-        //Si no aparece ninguna, se busca si la cuenta existe para el usuario actual como usuario secuendario
-        if (basicAccountOptional.isEmpty()) {
-            basicAccountOptional = basicAccountRepository.findAccountsOfCurrentUser2(userName, senderAccountId);
-            if (basicAccountOptional.isEmpty()) throw new
-                    ResponseStatusException(HttpStatus.NOT_FOUND,"Account not owned by user");
-        }
-
-        BasicAccount senderAccount = basicAccountOptional.get();
-        BasicAccount receiverAccount = basicAccountRepository.findById(receiverAccountId).get();
-
-        //Comprobamos que el nombre del destinatario coincide con el de la cuenta especificada para la transferencia
-        if (  !(receiverName.equals(receiverAccount.getPrimaryOwner().getName()))  ){
-            throw new
-                    ResponseStatusException(HttpStatus.BAD_REQUEST,"The owner of the destination account " +
-                    "does not match the name provided, the transfer won't take place");
-        }
-
-        //Comprobamos si hay fondos suficientes
-        if (senderAccount.getBalance().getAmount().compareTo(accountBalanceDTO.getBalance().getAmount()) == 1){
-            //Restamos la cantidad al balance de la cuenta que envía los fondos
-            basicAccountService.updateBalance(
-                    new Money (senderAccount.getBalance().getAmount().subtract(accountBalanceDTO.getBalance().getAmount())),
-                    senderAccountId);
-
-            //Sumamos el balance a la cuenta que recibe los fondos
-            basicAccountService.updateBalance(
-                    new Money (receiverAccount.getBalance().getAmount().add(accountBalanceDTO.getBalance().getAmount())),
-                    receiverAccountId);
-        }else{
-            throw new
-                    ResponseStatusException(HttpStatus.BAD_REQUEST,"Not enough funds in sender account");
-        }
-
+        basicAccountService.transferBalance(accountBalanceDTO,senderAccountId,receiverAccountId,receiverName);
     }
 
     @PatchMapping("/accounts/third_party/{amount}/{accountId}/{secretKey}")
@@ -158,27 +112,30 @@ public class BasicAccountController implements IBasicAccountController {
         //compartir id de cuenta en cuentas diferentes), y se saca el valor de secretKey para validar que sea igual
         //al proporcionado en el método. Si es igual se actualiza la cuenta, sino da error
         if (!checkingOptional.isEmpty()) {
+            System.out.println("checking");
             secretKeyFromAccount = checkingOptional.get().getSecretKey();
             if (!secretKeyFromAccount.equals(secretKey))
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Secret key mismatched with that account id");
             else basicAccountService.updateBalance(
-                    new Money (checkingOptional.get().getBalance().increaseAmount(accountBalanceDTO.getBalance().getAmount())),
+                    new Money (checkingOptional.get().getBalance().getAmount().add(accountBalanceDTO.getBalance().getAmount())),
                     accountId);
         }
         if (!savingsOptional.isEmpty()) {
+            System.out.println("savings");
             secretKeyFromAccount = savingsOptional.get().getSecretKey();
             if (!secretKeyFromAccount.equals(secretKey))
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Secret key mismatched with that account id");
             else basicAccountService.updateBalance(
-                    new Money (savingsOptional.get().getBalance().increaseAmount(accountBalanceDTO.getBalance().getAmount())),
+                    new Money (savingsOptional.get().getBalance().getAmount().add(accountBalanceDTO.getBalance().getAmount())),
                     accountId);
         }
         if (!studentAccountOptional.isEmpty()) {
+            System.out.println("student");
             secretKeyFromAccount = studentAccountOptional.get().getSecretKey();
             if (!secretKeyFromAccount.equals(secretKey))
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Secret key mismatched with that account id");
             else basicAccountService.updateBalance(
-                    new Money (studentAccountOptional.get().getBalance().increaseAmount(accountBalanceDTO.getBalance().getAmount())),
+                    new Money (studentAccountOptional.get().getBalance().getAmount().add(accountBalanceDTO.getBalance().getAmount())),
                     accountId);
         }
 
