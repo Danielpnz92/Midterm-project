@@ -17,14 +17,11 @@ public interface TransactionsRepository extends JpaRepository<Transactions, Inte
 
     Optional<BasicAccount> findByAccountId(Integer id);
 
-    @Query("SELECT t FROM Transactions t WHERE t.transferDateTime=?1 AND t.transferDateTime=?2")
-    List<Transactions> findTransactToDelete(Integer id);
-
     @Modifying
-    @Query("DELETE from Transactions t where t.transferDateTime BETWEEN {ts ?1} AND {ts ?2} AND t.id=?3")
-    void deleteByTransferDateTimeLessThan(LocalDateTime dateTime1, LocalDateTime dateTime2, Integer id);
+    @Query("DELETE from Transactions t where t.transferDateTime < ?1 AND t.id = ?2")
+    void deleteByTransferDateTimeLessThan(LocalDateTime dateTime1, Integer id);
 
-    @Query("SELECT MAX(t.transferAmount) FROM Transactions t WHERE t.transferDateTime BETWEEN {ts ?1} AND {ts ?2}")
+    @Query("SELECT MAX(t.transferAmount) FROM Transactions t WHERE t.transferDateTime BETWEEN ?1 AND ?2")
     Optional<BigDecimal> findMaxTransctLast24Hours(LocalDateTime dateTime1, LocalDateTime dateTime2);
 //    DateTime format in sql: {ts '2008-12-20 00:00:00'}
 }

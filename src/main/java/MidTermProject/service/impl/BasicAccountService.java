@@ -114,7 +114,7 @@ public class BasicAccountService implements IBasicAccountService {
 
             //borramos las transferencias anteriores a hace 24 horas la cuenta que envia dinero, ya que solo interesan
             // las transacciones de la cuenta de las últimas 24 horas
-            transactionsRepository.deleteByTransferDateTimeLessThan(t, LocalDateTime.now(), senderAccountId);
+            transactionsRepository.deleteByTransferDateTimeLessThan(t, senderAccountId);
 
 
         }else{
